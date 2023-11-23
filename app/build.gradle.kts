@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.dagger.hilt.android")
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
@@ -86,20 +87,30 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     // di
-    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
-    implementation ("com.google.dagger:hilt-android:2.48.1")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.48.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kaptTest("com.google.dagger:hilt-compiler:2.48.1")
+
+    // remote
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
     // realm
-    implementation ("io.realm.kotlin:library-base:1.11.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
+    implementation("io.realm.kotlin:library-base:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
 
     // recyclerView
-    implementation ("com.google.android.material:material:1.12.0-alpha01")
-    implementation ("androidx.recyclerview:recyclerview-selection:1.1.0")
-    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation("com.google.android.material:material:1.12.0-alpha01")
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // glide
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     // test
     testImplementation("junit:junit:4.13.2")
@@ -115,4 +126,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
     testImplementation("io.mockk:mockk:1.13.1")
     androidTestImplementation("io.mockk:mockk-agent:1.13.8")
+}
+
+kapt {
+    correctErrorTypes = true
 }
