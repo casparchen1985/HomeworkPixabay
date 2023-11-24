@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.compose.ui.text.substring
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -43,7 +42,7 @@ class ResultFragment : Fragment() {
                 }
             })
             setImageClickListener { url ->
-                Toast.makeText(requireContext(), "Img Url: ... ${url.takeLast(15)}", Toast.LENGTH_SHORT).show()
+                ImageDialogFragment(url).show(childFragmentManager, "ImageDialogFragment")
             }
         }
 
