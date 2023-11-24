@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs")
     id("kotlin-android")
     id("kotlin-kapt")
     id("kotlin-parcelize")

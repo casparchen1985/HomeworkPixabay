@@ -9,6 +9,21 @@
         android:id="@+id/SearchFragment"
         android:name="com.caspar.homeworkpixabay.ui.SearchFragment"
         tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_nav_SearchFragment_to_nav_ResultFragment"
+            app:destination="@id/ResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ResultFragment"
+        android:name="com.caspar.homeworkpixabay.ui.ResultFragment"
+        tools:layout="@layout/fragment_result">
+        <argument
+            android:name="searchKeyword"
+            app:argType="string" />
+        <argument
+            android:name="searchType"
+            app:argType="com.caspar.homeworkpixabay.model.enumClass.SearchType" />
     </fragment>
 
 </navigation>

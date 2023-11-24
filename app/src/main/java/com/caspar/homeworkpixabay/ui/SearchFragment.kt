@@ -10,6 +10,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.caspar.homeworkpixabay.databinding.FragmentSearchBinding
 import com.caspar.homeworkpixabay.model.enumClass.SearchType
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +63,9 @@ class SearchFragment : Fragment() {
             changeAbnormalContent(false)
             if (result) {
                 binding.searchEditColumn.text?.clear()
-                Toast.makeText(requireContext(), "Image fetched!", Toast.LENGTH_SHORT).show()
+                this@SearchFragment.findNavController().navigate(
+                    SearchFragmentDirections.actionNavSearchFragmentToNavResultFragment(searchKeyword, searchType)
+                )
             }
         }
     }
