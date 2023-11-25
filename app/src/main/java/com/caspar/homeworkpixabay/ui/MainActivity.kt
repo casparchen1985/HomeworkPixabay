@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.caspar.homeworkpixabay.databinding.ActivityMainBinding
+import com.caspar.homeworkpixabay.model.SharedPrefManager
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+
+        SharedPrefManager.setup(this)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

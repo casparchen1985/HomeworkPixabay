@@ -32,4 +32,12 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="60dp"
+        android:layout_height="55dp"
+        android:layout_margin="30dp"
+        android:src="@drawable/ic_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
