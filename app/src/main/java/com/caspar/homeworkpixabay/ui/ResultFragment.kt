@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,7 +19,10 @@ import com.caspar.homeworkpixabay.ui.adapter.ImagesAdapter
 import com.caspar.homeworkpixabay.ui.adapter.ImagesDecoration
 import com.caspar.homeworkpixabay.ui.adapter.ImagesListDecoration
 import com.caspar.homeworkpixabay.ui.enumClass.ImageDisplayType
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class ResultFragment : Fragment() {
@@ -32,19 +34,38 @@ class ResultFragment : Fragment() {
     private lateinit var recyclerAdapter: ImagesAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var staggeredGridLayoutManager: StaggeredGridLayoutManager
-    private var displayType = ImageDisplayType.GRID
+    private var gridSpanCount by Delegates.notNull<Int>()
+    private var gridTypeOrientation by Delegates.notNull<Int>()
+    private var displayType: ImageDisplayType? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO update DisplayType from remote config
 
-        // 讀取 sharedPref 中 ImageDisplayType 的設定值
+        // ImageDisplayType
+        // 優先讀取 sharedPref 的設定值 (手動操作)
         SharedPrefManager().apply {
             val record = this.readInt("ImageDisplayType")
             if (record > 0) {
-                displayType = ImageDisplayType.from(record) ?: return@apply
+                displayType = ImageDisplayType.from(record)
             }
         }
+        // 再讀 remoteConfig 設定值 (預設)
+        if (displayType == null) {
+            val typeInt = Firebase.remoteConfig.getDouble("ImageDisplayType").toInt()
+            displayType = ImageDisplayType.from(typeInt) ?: ImageDisplayType.GRID
+        }
+
+        // gridSpanCount
+        gridSpanCount = Firebase.remoteConfig
+            .getDouble("gridSpanCount")
+            .toInt()
+            .let { if (it in 1..5) it else 2 }
+
+        // gridTypeOrientation
+        gridTypeOrientation = Firebase.remoteConfig
+            .getDouble("gridTypeOrientation")
+            .toInt()
+            .let { if (it == 1) 0 else 1 }
     }
 
     override fun onCreateView(
@@ -54,10 +75,9 @@ class ResultFragment : Fragment() {
         _binding = FragmentResultBinding.inflate(inflater, container, false)
 
         linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        staggeredGridLayoutManager = StaggeredGridLayoutManager(3, LinearLayout.VERTICAL)
-//        staggeredGridLayoutManager = StaggeredGridLayoutManager(5, LinearLayout.HORIZONTAL)
+        staggeredGridLayoutManager = StaggeredGridLayoutManager(gridSpanCount, gridTypeOrientation)
 
-        recyclerAdapter = ImagesAdapter(displayType)
+        displayType?.let { recyclerAdapter = ImagesAdapter(it) }
         recyclerAdapter.apply {
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -101,6 +121,8 @@ class ResultFragment : Fragment() {
             viewModel.readImagesData()
         }
 
+        setFABIcon()
+
         return binding.root
     }
 
@@ -134,26 +156,31 @@ class ResultFragment : Fragment() {
         _binding = null
     }
 
-    private fun changeDisplayType() {
-        // 更新最新設定值
-        displayType = when (displayType) {
-            ImageDisplayType.GRID -> ImageDisplayType.LIST
-            ImageDisplayType.LIST -> ImageDisplayType.GRID
-        }
-
-        // 設定值存擋
-        SharedPrefManager().saveInt("ImageDisplayType", displayType.value)
-
-        // 更新 FAB icon
+    private fun setFABIcon() {
+        if (displayType == null) return
         binding.fab.setImageDrawable(
             ContextCompat.getDrawable(
                 requireContext(),
                 if (displayType == ImageDisplayType.GRID) R.drawable.ic_list else R.drawable.ic_grid
             )
         )
+    }
+
+    private fun changeDisplayType() {
+        // 更新最新設定值
+        displayType = when (displayType) {
+            ImageDisplayType.GRID -> ImageDisplayType.LIST
+            ImageDisplayType.LIST -> ImageDisplayType.GRID
+            null -> return
+        }
+
+        // 設定值存擋
+        SharedPrefManager().saveInt("ImageDisplayType", displayType!!.value)
+
+        setFABIcon()
 
         // 更新 Adapter ViewHolder
-        recyclerAdapter.setDisplayType(displayType)
+        recyclerAdapter.setDisplayType(displayType!!)
 
         // RecyclerView 套用新設定
         recyclerView.apply {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "440926225367",
+    "project_id": "homeworkpixabay",
+    "storage_bucket": "homeworkpixabay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440926225367:android:fb9a15523cc52cebefc192",
+        "android_client_info": {
+          "package_name": "com.caspar.homeworkpixabay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEaT_cP9XSt6DS2Nl4_lQrt7mtlRhmixA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
