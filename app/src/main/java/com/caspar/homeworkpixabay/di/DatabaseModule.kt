@@ -1,5 +1,6 @@
 package com.caspar.homeworkpixabay.di
 
+import com.caspar.homeworkpixabay.model.realmObject.HistoryObject
 import com.caspar.homeworkpixabay.model.realmObject.HitObject
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,7 @@ object DatabaseModule {
     @Provides
     fun provideRealm(): Realm {
         val realmConfig = RealmConfiguration
-            .Builder(schema = setOf(HitObject::class))
+            .Builder(schema = setOf(HitObject::class, HistoryObject::class))
             .compactOnLaunch()
             .deleteRealmIfMigrationNeeded()
             .name("HomeworkPixabay")
