@@ -12,10 +12,10 @@ import org.mongodb.kbson.ObjectId
 
 open class ImageResultObject() : RealmObject, AsUIClass<ImageResult> {
     @PrimaryKey
-    var _id: ObjectId = BsonObjectId()
-    var total: Int = 0
-    var totalHits: Int = 0
-    var hits: RealmList<HitObject> = realmListOf()
+    private var _id: ObjectId = BsonObjectId()
+    private var total: Int = 0
+    private var totalHits: Int = 0
+    private var hits: RealmList<HitObject> = realmListOf()
 
     constructor(total: Int, totalHits: Int, hits: RealmList<HitObject>) : this() {
         this.total = total
@@ -38,29 +38,29 @@ open class ImageResultObject() : RealmObject, AsUIClass<ImageResult> {
 
 open class HitObject() : RealmObject, AsUIClass<Hit> {
     @PrimaryKey
-    var _id: ObjectId = BsonObjectId()
-    var id: Int = 0
-    var pageURL: String? = null
-    var type: String? = null
-    var tags: String? = null
-    var previewURL: String? = null
-    var previewWidth: Int = 0
-    var previewHeight: Int = 0
-    var webformatURL: String? = null
-    var webFormatWidth: Int = 0
-    var webFormatHeight: Int = 0
-    var largeImageURL: String? = null
-    var fullHDURL: String? = null
-    var imageURL: String? = null
-    var imageWidth: Int = 0
-    var imageHeight: Int = 0
-    var imageSize: Int = 0
-    var views: Int = 0
-    var likes: Int = 0
-    var comments: Int = 0
-    var userId: Int = 0
-    var user: String? = null
-    var userImageURL: String? = null
+    private var _id: ObjectId = BsonObjectId()
+    private var id: Int = 0
+    private var pageURL: String? = null
+    private var type: String? = null
+    private var tags: String? = null
+    private var previewURL: String? = null
+    private var previewWidth: Int = 0
+    private var previewHeight: Int = 0
+    private var webformatURL: String? = null
+    private var webFormatWidth: Int = 0
+    private var webFormatHeight: Int = 0
+    private var largeImageURL: String? = null
+    private var fullHDURL: String? = null
+    private var imageURL: String? = null
+    private var imageWidth: Int = 0
+    private var imageHeight: Int = 0
+    private var imageSize: Int = 0
+    private var views: Int = 0
+    private var likes: Int = 0
+    private var comments: Int = 0
+    private var userId: Int = 0
+    private var user: String? = null
+    private var userImageURL: String? = null
 
     constructor(
         id: Int,

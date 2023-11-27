@@ -16,12 +16,13 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideRealm(): Realm {
-        val realmConfig = RealmConfiguration
-            .Builder(schema = setOf(HitObject::class, HistoryObject::class))
-            .compactOnLaunch()
-            .deleteRealmIfMigrationNeeded()
-            .name("HomeworkPixabay")
-            .build()
-        return Realm.open(realmConfig)
+        return Realm.open(
+            RealmConfiguration
+                .Builder(schema = setOf(HitObject::class, HistoryObject::class))
+                .compactOnLaunch()
+                .deleteRealmIfMigrationNeeded()
+                .name("HomeworkPixabay")
+                .build()
+        )
     }
 }

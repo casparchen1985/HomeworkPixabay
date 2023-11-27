@@ -10,8 +10,8 @@ import org.mongodb.kbson.ObjectId
 
 open class HistoryObject() : RealmObject, AsUIClass<History> {
     @PrimaryKey
-    var _id: ObjectId = BsonObjectId()
-    var unix: Long = 0L
+    private var _id: ObjectId = BsonObjectId()
+    private var unix: Long = 0L
 
     @Index
     var keyword: String? = null
