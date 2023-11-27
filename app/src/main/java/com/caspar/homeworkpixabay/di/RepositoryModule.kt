@@ -1,9 +1,9 @@
 package com.caspar.homeworkpixabay.di
 
 import com.caspar.homeworkpixabay.model.ImagesRepository
-import com.caspar.homeworkpixabay.model.ImagesRepositoryImply
+import com.caspar.homeworkpixabay.model.ImagesRepositoryImpl
 import com.caspar.homeworkpixabay.model.RealmRepository
-import com.caspar.homeworkpixabay.model.RealmRepositoryImply
+import com.caspar.homeworkpixabay.model.RealmRepositoryImpl
 import com.caspar.homeworkpixabay.model.interfaceDefine.Images
 import dagger.Module
 import dagger.Provides
@@ -18,12 +18,12 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun provideImagesRepository(apiService: Images): ImagesRepository {
-        return ImagesRepositoryImply(apiService)
+        return ImagesRepositoryImpl(apiService)
     }
 
     @Singleton
     @Provides
     fun provideRealmRepository(realm: Realm): RealmRepository {
-        return RealmRepositoryImply(realm)
+        return RealmRepositoryImpl(realm)
     }
 }

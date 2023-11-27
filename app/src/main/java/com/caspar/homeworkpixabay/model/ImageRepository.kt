@@ -14,7 +14,7 @@ interface ImagesRepository : Serializable {
 }
 
 @Singleton
-class ImagesRepositoryImply @Inject constructor(
+class ImagesRepositoryImpl @Inject constructor(
     private val apiService: Images,
 ) : ImagesRepository {
     override suspend fun fetchPhotos(keyword: String, type: String, pageNumber: Int, pageQuantity: Int): List<Hit>? {

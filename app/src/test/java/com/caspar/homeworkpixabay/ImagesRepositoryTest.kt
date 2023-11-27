@@ -1,7 +1,7 @@
 package com.caspar.homeworkpixabay
 
 import com.caspar.homeworkpixabay.di.HomeworkPixabayApplication
-import com.caspar.homeworkpixabay.model.ImagesRepositoryImply
+import com.caspar.homeworkpixabay.model.ImagesRepositoryImpl
 import com.caspar.homeworkpixabay.model.dataClass.Hit
 import com.caspar.homeworkpixabay.model.dataClass.ImageResult
 import com.caspar.homeworkpixabay.model.interfaceDefine.Images
@@ -41,7 +41,7 @@ class ImagesRepositoryTest {
         coEvery { stubService.fetchImages(any(), any()) } returns stubResponse
 
         // set Local
-        val imagesRepos = spyk(ImagesRepositoryImply(stubService))
+        val imagesRepos = spyk(ImagesRepositoryImpl(stubService))
 
         // run Test
         val result = imagesRepos.fetchPhotos("normal", "normal")
@@ -58,7 +58,7 @@ class ImagesRepositoryTest {
         coEvery { stubService.fetchImages(any(), any()) } returns stubResponse
 
         // set Local
-        val imageRepos = spyk(ImagesRepositoryImply(stubService))
+        val imageRepos = spyk(ImagesRepositoryImpl(stubService))
 
         // run Test
         val result = imageRepos.fetchPhotos("error", "error")

@@ -27,7 +27,7 @@ interface RealmRepository {
 }
 
 @Singleton
-class RealmRepositoryImply @Inject constructor(
+class RealmRepositoryImpl @Inject constructor(
     private val realm: Realm
 ) : RealmRepository {
     override suspend fun <U : AsDBObject<O>, O : RealmObject> save(uiObject: U) {
