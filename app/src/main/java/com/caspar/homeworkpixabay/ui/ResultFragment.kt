@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -36,13 +37,15 @@ class ResultFragment : Fragment() {
     private lateinit var staggeredGridLayoutManager: StaggeredGridLayoutManager
     private var gridSpanCount by Delegates.notNull<Int>()
     private var gridTypeOrientation by Delegates.notNull<Int>()
+    private val gridDefaultSpanCount = 2
+    private val gridBorderWidthDP = 10
     private var displayType: ImageDisplayType? = null
     private var displayTypeClassName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        displayTypeClassName = resources.getString(R.string.display_type_name)
+        displayTypeClassName = resources.getString(R.string.name_display_type)
 
         // ImageDisplayType
         // 優先讀取 sharedPref 的設定值 (手動操作)
@@ -60,15 +63,15 @@ class ResultFragment : Fragment() {
 
         // gridSpanCount
         gridSpanCount = Firebase.remoteConfig
-            .getDouble("gridSpanCount")
+            .getDouble(resources.getString(R.string.name_grid_span_count))
             .toInt()
-            .let { if (it in 1..5) it else 2 }
+            .let { if (it in 1..5) it else gridDefaultSpanCount }
 
         // gridTypeOrientation
         gridTypeOrientation = Firebase.remoteConfig
-            .getDouble("gridTypeOrientation")
+            .getDouble(resources.getString(R.string.name_grid_orientation))
             .toInt()
-            .let { if (it == 1) 0 else 1 }
+            .let { if (it == 1) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL }
     }
 
     override fun onCreateView(
@@ -89,7 +92,10 @@ class ResultFragment : Fragment() {
                 }
             })
             setImageClickListener { url ->
-                ImageDialogFragment(url).show(childFragmentManager, "ImageDialogFragment")
+                ImageDialogFragment(url).show(
+                    childFragmentManager,
+                    resources.getString(R.string.tag_image_dialog)
+                )
             }
         }
 
@@ -100,7 +106,7 @@ class ResultFragment : Fragment() {
             adapter = recyclerAdapter
             itemAnimator = null
             addItemDecoration(
-                if (displayType == ImageDisplayType.GRID) ImagesDecoration(10) else ImagesListDecoration()
+                if (displayType == ImageDisplayType.GRID) ImagesDecoration(gridBorderWidthDP) else ImagesListDecoration()
             )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -142,7 +148,9 @@ class ResultFragment : Fragment() {
         viewModel.fetchMoreLiveData.observe(viewLifecycleOwner) {
             if (!it) {
                 binding.loadingText.visibility = View.GONE
-                Toast.makeText(requireContext(), "載入圖片失敗, 請稍後再試", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(), resources.getString(R.string.message_fetch_image_fail), Toast.LENGTH_SHORT
+                ).show()
             } else {
                 viewModel.readImagesData()
             }
@@ -192,7 +200,7 @@ class ResultFragment : Fragment() {
             adapter = recyclerAdapter
             if (itemDecorationCount > 0) removeItemDecorationAt(0)
             addItemDecoration(
-                if (displayType == ImageDisplayType.GRID) ImagesDecoration(10) else ImagesListDecoration()
+                if (displayType == ImageDisplayType.GRID) ImagesDecoration(gridBorderWidthDP) else ImagesListDecoration()
             )
         }
     }

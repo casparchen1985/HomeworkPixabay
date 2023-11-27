@@ -11,22 +11,22 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.QueryMap
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.Collections
 import java.util.concurrent.TimeUnit
 
 object ApiManager {
+    private const val defaultTimeOut = 10L
+
     private var httpClient: OkHttpClient? = null
         get() {
             if (field == null) {
                 field = OkHttpClient()
                     .newBuilder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .connectTimeout(defaultTimeOut, TimeUnit.SECONDS)
+                    .readTimeout(defaultTimeOut, TimeUnit.SECONDS)
+                    .writeTimeout(defaultTimeOut, TimeUnit.SECONDS)
                     .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                     .addInterceptor(logInterceptor)
                     .addInterceptor(exceptionInterceptor)

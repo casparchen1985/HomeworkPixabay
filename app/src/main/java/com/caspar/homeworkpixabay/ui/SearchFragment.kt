@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.caspar.homeworkpixabay.R
 import com.caspar.homeworkpixabay.databinding.FragmentSearchBinding
 import com.caspar.homeworkpixabay.model.enumClass.SearchType
 import com.caspar.homeworkpixabay.ui.customized.DimensionCalculator.Companion.toPX
@@ -73,7 +74,11 @@ class SearchFragment : Fragment() {
                 searchKeyword = searchAutoComplete.text.toString().trim()
 
                 if (searchKeyword.isEmpty()) {
-                    Toast.makeText(requireContext(), "請輸入與圖片相關的關鍵字", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(R.string.message_search_without_keyword),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@setOnClickListener
                 }
 
@@ -86,7 +91,6 @@ class SearchFragment : Fragment() {
                 abnormalLayout.visibility = View.VISIBLE
                 changeAbnormalContent(true)
             }
-
 
             searchAutoComplete.apply {
                 // 點擊順序: autoComplete focus 有改變時
@@ -160,12 +164,12 @@ class SearchFragment : Fragment() {
 
             message.apply {
                 visibility = if (loading) View.GONE else View.VISIBLE
-                text = "搜尋圖片發生異常，請稍後再試"
+                text = resources.getString(R.string.message_search_without_response)
             }
 
             abnormalBtn.apply {
                 visibility = if (loading) View.GONE else View.VISIBLE
-                text = "確定"
+                text = resources.getString(R.string.button_confirm)
                 setOnClickListener {
                     binding.abnormalLayout.visibility = View.GONE
                 }

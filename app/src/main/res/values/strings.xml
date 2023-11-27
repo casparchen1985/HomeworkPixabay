@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">HomeworkPixabay</string>
-    <string name="display_type_name">"ImageDisplayType"</string>
+    <string name="pixabay_key">"40546991-5cdfe893a9f48b2a64e5f886f"</string>
+    <string name="name_display_type">"ImageDisplayType"</string>
+    <string name="name_grid_span_count">"gridSpanCount"</string>
+    <string name="name_grid_orientation">"gridTypeOrientation"</string>
+    <string name="tag_image_dialog">"ImageDialogFragment"</string>
+    <string name="button_confirm">"確定"</string>
+    <string name="message_search_without_keyword">"請輸入與圖片相關的關鍵字"</string>
+    <string name="message_search_without_response">"搜尋圖片發生異常，請稍後再試"</string>
+    <string name="message_fetch_image_fail">"載入圖片失敗, 請稍後再試"</string>
+    <string name="message_fetch_remote_config">"RemoteConfig fetched and Activated"</string>
+    <string name="message_fetch_remote_config_fail">"RemoteConfig fetch failed"</string>
+    <string name="message_receive_remote_config">"[Monitor] RemoteConfig updated"</string>
+    <string name="message_receive_remote_config_fail">"[Monitor] RemoteConfig update failed"</string>
+    <string name="message_ok_http_exception">"Extract response body as String is Null or failed"</string>
 </resources>

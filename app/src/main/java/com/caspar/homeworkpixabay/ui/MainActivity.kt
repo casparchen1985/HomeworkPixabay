@@ -26,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var touchedView: View? = null
+    private val remoteConfigMinInterval = 3600L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         SharedPrefManager.setup(this)
 
         val setting = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600
+            minimumFetchIntervalInSeconds = remoteConfigMinInterval
         }
         Firebase.remoteConfig.apply {
             setConfigSettingsAsync(setting)
@@ -44,22 +45,32 @@ class MainActivity : AppCompatActivity() {
             fetchAndActivate().addOnCompleteListener { task ->
                 Toast.makeText(
                     this@MainActivity,
-                    if (task.isSuccessful) "RemoteConfig fetched and Activated" else "RemoteConfig fetch failed",
+                    resources.getString(
+                        if (task.isSuccessful) R.string.message_fetch_remote_config else R.string.message_fetch_remote_config_fail
+                    ),
                     Toast.LENGTH_SHORT
                 ).show()
             }
 
             addOnConfigUpdateListener(object : ConfigUpdateListener {
                 override fun onUpdate(configUpdate: ConfigUpdate) {
-                    if (configUpdate.updatedKeys.contains(resources.getString(R.string.display_type_name))) {
+                    if (configUpdate.updatedKeys.contains(resources.getString(R.string.name_display_type))) {
                         this@apply.activate().addOnCompleteListener {
-                            Toast.makeText(this@MainActivity, "[Monitor] RemoteConfig updated", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                resources.getString(R.string.message_receive_remote_config),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
 
                 override fun onError(error: FirebaseRemoteConfigException) {
-                    Toast.makeText(this@MainActivity, "[Monitor] RemoteConfig update failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        resources.getString(R.string.message_receive_remote_config_fail),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         }

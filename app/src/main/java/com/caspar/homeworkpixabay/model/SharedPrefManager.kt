@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 
 class SharedPrefManager {
     companion object {
+        private const val DEFAULT_INT = Int.MIN_VALUE
         private lateinit var prefs: SharedPreferences
         private lateinit var prefEditor: SharedPreferences.Editor
 
@@ -20,6 +21,6 @@ class SharedPrefManager {
     }
 
     fun readInt(key: String): Int {
-        return prefs.getInt(key, -99)
+        return prefs.getInt(key, DEFAULT_INT)
     }
 }
