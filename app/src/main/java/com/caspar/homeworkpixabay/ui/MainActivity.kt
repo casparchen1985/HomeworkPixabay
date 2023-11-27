@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.WindowCompat
+import com.caspar.homeworkpixabay.R
 import com.caspar.homeworkpixabay.databinding.ActivityMainBinding
 import com.caspar.homeworkpixabay.model.SharedPrefManager
 import com.google.android.material.textfield.TextInputEditText
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
             addOnConfigUpdateListener(object : ConfigUpdateListener {
                 override fun onUpdate(configUpdate: ConfigUpdate) {
-                    if (configUpdate.updatedKeys.contains("ImageDisplayType")) {
+                    if (configUpdate.updatedKeys.contains(resources.getString(R.string.display_type_name))) {
                         this@apply.activate().addOnCompleteListener {
                             Toast.makeText(this@MainActivity, "[Monitor] RemoteConfig updated", Toast.LENGTH_SHORT).show()
                         }

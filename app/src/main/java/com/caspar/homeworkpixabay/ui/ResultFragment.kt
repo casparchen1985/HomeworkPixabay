@@ -37,21 +37,24 @@ class ResultFragment : Fragment() {
     private var gridSpanCount by Delegates.notNull<Int>()
     private var gridTypeOrientation by Delegates.notNull<Int>()
     private var displayType: ImageDisplayType? = null
+    private var displayTypeClassName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        displayTypeClassName = resources.getString(R.string.display_type_name)
+
         // ImageDisplayType
         // 優先讀取 sharedPref 的設定值 (手動操作)
         SharedPrefManager().apply {
-            val record = this.readInt("ImageDisplayType")
+            val record = this.readInt(displayTypeClassName)
             if (record > 0) {
                 displayType = ImageDisplayType.from(record)
             }
         }
         // 再讀 remoteConfig 設定值 (預設)
         if (displayType == null) {
-            val typeInt = Firebase.remoteConfig.getDouble("ImageDisplayType").toInt()
+            val typeInt = Firebase.remoteConfig.getDouble(displayTypeClassName).toInt()
             displayType = ImageDisplayType.from(typeInt) ?: ImageDisplayType.GRID
         }
 
@@ -175,7 +178,7 @@ class ResultFragment : Fragment() {
         }
 
         // 設定值存擋
-        SharedPrefManager().saveInt("ImageDisplayType", displayType!!.value)
+        SharedPrefManager().saveInt(displayTypeClassName, displayType!!.value)
 
         setFABIcon()
 

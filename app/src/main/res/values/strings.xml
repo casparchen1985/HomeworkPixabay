@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">HomeworkPixabay</string>
-    <string name="pixabay_key">"40546991-5cdfe893a9f48b2a64e5f886f"</string>
+    <string name="display_type_name">"ImageDisplayType"</string>
 </resources>
