@@ -3,11 +3,10 @@ package com.caspar.homeworkpixabay.model
 import com.caspar.homeworkpixabay.model.dataClass.Hit
 import com.caspar.homeworkpixabay.model.interfaceDefine.Images
 import retrofit2.Response
-import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface ImagesRepository : Serializable {
+interface ImagesRepository {
     suspend fun fetchPhotos(keyword: String, type: String, pageNumber: Int = 1, pageQuantity: Int = 30): List<Hit>?
 }
 
