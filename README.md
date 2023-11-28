@@ -3,7 +3,6 @@
 - Apply
   - MVVM structure
   - Sensitive information isolated
-  - Unit Test
 - Used components
   - Android
     - LiveData
@@ -20,6 +19,9 @@
 - Unit Test
   - Repository
     - ImagesRepositoryTest
+
+# Class Diagram
+![Class Diagram](https://drive.google.com/uc?id=1z5bGGHR3WpnfUrziQHvXkx0-aiRD0qM5)
   
 # Before building
 - Add "key.properties" file at the root of project
