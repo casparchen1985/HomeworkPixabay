@@ -29,8 +29,6 @@ class ImagesRepositoryTest {
 
     @Before
     fun setup() {
-        val stubApp = spyk(HomeworkPixabayApplication)
-        stubApp.appContext = mockk(relaxed = true)
         stubService = mockk<Images>()
     }
 
