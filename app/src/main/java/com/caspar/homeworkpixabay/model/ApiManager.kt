@@ -1,6 +1,7 @@
 package com.caspar.homeworkpixabay.model
 
 import android.util.Log
+import com.caspar.homeworkpixabay.BuildConfig
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -28,12 +29,33 @@ object ApiManager {
                     .readTimeout(defaultTimeOut, TimeUnit.SECONDS)
                     .writeTimeout(defaultTimeOut, TimeUnit.SECONDS)
                     .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+                    .addInterceptor(keyInterceptor)
                     .addInterceptor(logInterceptor)
                     .addInterceptor(exceptionInterceptor)
                     .build()
             }
             return field
         }
+
+    private val keyInterceptor = Interceptor { chain ->
+        // retrieve original config
+        var request = chain.request()
+        var url = request.url
+        val body = request.body
+
+        // modify
+        url = url.newBuilder()
+            .addQueryParameter("key", BuildConfig.PIXABAY_KEY)
+            .build()
+
+        request = request.newBuilder().apply {
+            url(url)
+            method(request.method, body)
+        }.build()
+
+        // return
+        chain.proceed(request)
+    }
 
     private val exceptionInterceptor = Interceptor { chain ->
         val request = chain.request()

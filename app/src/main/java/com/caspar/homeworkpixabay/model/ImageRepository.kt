@@ -1,7 +1,5 @@
 package com.caspar.homeworkpixabay.model
 
-import com.caspar.homeworkpixabay.R
-import com.caspar.homeworkpixabay.di.HomeworkPixabayApplication
 import com.caspar.homeworkpixabay.model.dataClass.Hit
 import com.caspar.homeworkpixabay.model.interfaceDefine.Images
 import retrofit2.Response
@@ -19,10 +17,8 @@ class ImagesRepositoryImpl @Inject constructor(
 ) : ImagesRepository {
     override suspend fun fetchPhotos(keyword: String, type: String, pageNumber: Int, pageQuantity: Int): List<Hit>? {
         val qString = keyword.replace(" ", "+").trim()
-        val key = HomeworkPixabayApplication.Companion.appContext.getString(R.string.pixabay_key)
         val stringParams = mapOf(
             "q" to qString,
-            "key" to key,
             "image_type" to type,
         )
         val intParams = mapOf(

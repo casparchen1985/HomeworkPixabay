@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,12 +17,19 @@ android {
     namespace = "com.caspar.homeworkpixabay"
     compileSdk = 34
 
+    // Import key.properties content
+    val keyProps = Properties()
+    keyProps.load(project.rootProject.file("key.properties").inputStream())
+
     defaultConfig {
         applicationId = "com.caspar.homeworkpixabay"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        // Set field
+        buildConfigField("String", "PIXABAY_KEY", "\"${keyProps.getProperty("PIXABAY_KEY")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArgument("runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder")
@@ -47,6 +56,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
         compose = true
     }

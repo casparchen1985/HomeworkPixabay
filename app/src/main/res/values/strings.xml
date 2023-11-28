@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">HomeworkPixabay</string>
-    <string name="pixabay_key">"40546991-5cdfe893a9f48b2a64e5f886f"</string>
     <string name="name_display_type">"ImageDisplayType"</string>
     <string name="name_grid_span_count">"gridSpanCount"</string>
     <string name="name_grid_orientation">"gridTypeOrientation"</string>
