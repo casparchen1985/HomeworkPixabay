@@ -7,10 +7,11 @@ import com.caspar.homeworkpixabay.model.RealmRepository
 import com.caspar.homeworkpixabay.model.dataClass.History
 import com.caspar.homeworkpixabay.model.realmObject.HistoryObject
 import com.caspar.homeworkpixabay.model.realmObject.HitObject
-import com.caspar.homeworkpixabay.ui.customized.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,15 +20,17 @@ class SearchViewModel @Inject constructor(
     private val imagesRepos: ImagesRepository,
     private val realmRepos: RealmRepository,
 ) : ViewModel() {
-    val searchResultLiveData = SingleLiveData<Boolean>()
-    val searchHistoryLiveData = SingleLiveData<ArrayList<String>>()
+    private val _searchResultSharedFlow = MutableSharedFlow<Boolean>()
+    val searchResultSharedFlow = _searchResultSharedFlow.asSharedFlow()
+    private val _searchHistorySharedFlow = MutableSharedFlow<ArrayList<String>>()
+    val searchHistorySharedFlow = _searchHistorySharedFlow.asSharedFlow()
 
     fun searchImages(keyword: String, type: String) {
         viewModelScope.launch {
             val remoteData = imagesRepos.fetchPhotos(keyword, type)
             realmRepos.delete(HitObject::class)
             if (!remoteData.isNullOrEmpty()) realmRepos.save(remoteData)
-            searchResultLiveData.postValue(remoteData != null)
+            _searchResultSharedFlow.emit(remoteData != null)
         }
     }
 
@@ -41,7 +44,7 @@ class SearchViewModel @Inject constructor(
                     if (arrayString.contains(keyword)) return@forEach
                     arrayString.add(keyword)
                 }
-            searchHistoryLiveData.postValue(arrayString)
+            _searchHistorySharedFlow.emit(arrayString)
         }
     }
 

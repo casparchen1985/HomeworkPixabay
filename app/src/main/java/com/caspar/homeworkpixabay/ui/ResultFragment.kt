@@ -19,6 +19,7 @@ import com.caspar.homeworkpixabay.model.SharedPrefManager
 import com.caspar.homeworkpixabay.ui.adapter.ImagesAdapter
 import com.caspar.homeworkpixabay.ui.adapter.ImagesDecoration
 import com.caspar.homeworkpixabay.ui.adapter.ImagesListDecoration
+import com.caspar.homeworkpixabay.ui.customized.collectLatestLifecycleFlow
 import com.caspar.homeworkpixabay.ui.enumClass.ImageDisplayType
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -88,7 +89,7 @@ class ResultFragment : Fragment() {
             registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
                 override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                     super.onItemRangeInserted(positionStart, itemCount)
-                    binding.loadingText.visibility = View.GONE
+                    showLoadingText(false)
                 }
             })
             setImageClickListener { url ->
@@ -118,7 +119,7 @@ class ResultFragment : Fragment() {
                             ?.max() == maxPosition
                     ) {
                         viewModel.fetchMoreImages(args.searchKeyword, args.searchType.value)
-                        binding.loadingText.visibility = View.VISIBLE
+                        showLoadingText(true)
                     }
                 }
             })
@@ -141,13 +142,14 @@ class ResultFragment : Fragment() {
             changeDisplayType()
         }
 
-        viewModel.imageContentLiveData.observe(viewLifecycleOwner) {
+        collectLatestLifecycleFlow(viewModel.imageContentSharedFlow) {
             recyclerAdapter.submitList(it)
+            showLoadingText(false)
         }
 
-        viewModel.fetchMoreLiveData.observe(viewLifecycleOwner) {
+        collectLatestLifecycleFlow(viewModel.fetchMoreSharedFlow) {
+            showLoadingText(false)
             if (!it) {
-                binding.loadingText.visibility = View.GONE
                 Toast.makeText(
                     requireContext(), resources.getString(R.string.message_fetch_image_fail), Toast.LENGTH_SHORT
                 ).show()
@@ -203,5 +205,9 @@ class ResultFragment : Fragment() {
                 if (displayType == ImageDisplayType.GRID) ImagesDecoration(gridBorderWidthDP) else ImagesListDecoration()
             )
         }
+    }
+
+    private fun showLoadingText(enable: Boolean) {
+        binding.loadingText.visibility = if (enable) View.VISIBLE else View.GONE
     }
 }

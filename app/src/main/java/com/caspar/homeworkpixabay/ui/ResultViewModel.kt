@@ -6,8 +6,9 @@ import com.caspar.homeworkpixabay.model.ImagesRepository
 import com.caspar.homeworkpixabay.model.RealmRepository
 import com.caspar.homeworkpixabay.model.dataClass.Hit
 import com.caspar.homeworkpixabay.model.realmObject.HitObject
-import com.caspar.homeworkpixabay.ui.customized.SingleLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -17,15 +18,17 @@ class ResultViewModel @Inject constructor(
     private val imagesRepository: ImagesRepository,
     private val realmRepos: RealmRepository,
 ) : ViewModel() {
-    val fetchMoreLiveData = SingleLiveData<Boolean>()
-    val imageContentLiveData = SingleLiveData<List<Hit>>()
+    private val _fetchMoreSharedFlow = MutableSharedFlow<Boolean>()
+    val fetchMoreSharedFlow = _fetchMoreSharedFlow.asSharedFlow()
+    private val _imageContentSharedFlow = MutableSharedFlow<List<Hit>>()
+    val imageContentSharedFlow = _imageContentSharedFlow.asSharedFlow()
     private var pageNumber = 2
     private val itemQuantity = 10
     private var isLocked = AtomicBoolean(false)
 
     fun readImagesData() {
         viewModelScope.launch {
-            imageContentLiveData.postValue(realmRepos.read(HitObject::class))
+            _imageContentSharedFlow.emit(realmRepos.read(HitObject::class))
         }
     }
 
@@ -39,7 +42,7 @@ class ResultViewModel @Inject constructor(
                 realmRepos.save(remoteData)
                 pageNumber += 1
             }
-            fetchMoreLiveData.postValue(remoteData != null)
+            _fetchMoreSharedFlow.emit(remoteData != null)
             isLocked.set(false)
         }
     }

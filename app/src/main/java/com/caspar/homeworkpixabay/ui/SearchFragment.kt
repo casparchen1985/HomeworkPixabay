@@ -19,6 +19,7 @@ import com.caspar.homeworkpixabay.R
 import com.caspar.homeworkpixabay.databinding.FragmentSearchBinding
 import com.caspar.homeworkpixabay.model.enumClass.SearchType
 import com.caspar.homeworkpixabay.ui.customized.DimensionCalculator.Companion.toPX
+import com.caspar.homeworkpixabay.ui.customized.collectLatestLifecycleFlow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -120,7 +121,13 @@ class SearchFragment : Fragment() {
             }
         }
 
-        viewModel.searchResultLiveData.observe(viewLifecycleOwner) { result ->
+        collectLatestLifecycleFlow(viewModel.searchHistorySharedFlow) { records ->
+            hasHistoryRecord = records.isNotEmpty()
+            historyAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, records)
+            binding.searchAutoComplete.setAdapter(historyAdapter)
+        }
+
+        collectLatestLifecycleFlow(viewModel.searchResultSharedFlow) { result ->
             binding.abnormalLayout.visibility = if (result) View.GONE else View.VISIBLE
             changeAbnormalContent(false)
             if (result) {
@@ -129,12 +136,6 @@ class SearchFragment : Fragment() {
                     SearchFragmentDirections.actionNavSearchFragmentToNavResultFragment(searchKeyword, searchType)
                 )
             }
-        }
-
-        viewModel.searchHistoryLiveData.observe(viewLifecycleOwner) { records ->
-            hasHistoryRecord = records.isNotEmpty()
-            historyAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, records)
-            binding.searchAutoComplete.setAdapter(historyAdapter)
         }
     }
 
