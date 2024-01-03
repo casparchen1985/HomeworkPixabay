@@ -14,6 +14,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.caspar.homeworkpixabay.R
 import com.caspar.homeworkpixabay.databinding.FragmentSearchBinding
@@ -21,6 +22,7 @@ import com.caspar.homeworkpixabay.model.enumClass.SearchType
 import com.caspar.homeworkpixabay.ui.customized.DimensionCalculator.Companion.toPX
 import com.caspar.homeworkpixabay.ui.customized.collectLatestLifecycleFlow
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -127,14 +129,29 @@ class SearchFragment : Fragment() {
             binding.searchAutoComplete.setAdapter(historyAdapter)
         }
 
-        collectLatestLifecycleFlow(viewModel.searchResultSharedFlow) { result ->
-            binding.abnormalLayout.visibility = if (result) View.GONE else View.VISIBLE
-            changeAbnormalContent(false)
-            if (result) {
-                binding.searchAutoComplete.text?.clear()
-                this@SearchFragment.findNavController().navigate(
-                    SearchFragmentDirections.actionNavSearchFragmentToNavResultFragment(searchKeyword, searchType)
-                )
+        // Crash, due to emit twice when back to search
+//        collectLatestLifecycleFlow(viewModel.searchResultSharedFlow) { result ->
+//            binding.abnormalLayout.visibility = if (result) View.GONE else View.VISIBLE
+//            changeAbnormalContent(false)
+//            if (result) {
+//                binding.searchAutoComplete.text?.clear()
+//                this@SearchFragment.findNavController().navigate(
+//                    SearchFragmentDirections.actionNavSearchFragmentToNavResultFragment(searchKeyword, searchType)
+//                )
+//            }
+//        }
+
+        // Old style but working
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.searchResultSharedFlow.collectLatest { result ->
+                binding.abnormalLayout.visibility = if (result) View.GONE else View.VISIBLE
+                changeAbnormalContent(false)
+                if (result) {
+                    binding.searchAutoComplete.text?.clear()
+                    this@SearchFragment.findNavController().navigate(
+                        SearchFragmentDirections.actionNavSearchFragmentToNavResultFragment(searchKeyword, searchType)
+                    )
+                }
             }
         }
     }

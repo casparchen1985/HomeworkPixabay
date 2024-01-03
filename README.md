@@ -5,7 +5,7 @@
   - Sensitive information isolated
 - Used Components
   - Android
-    - LiveData
+    - Flow
     - Coroutine
     - Navigation
     - Safe Args
